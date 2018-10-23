@@ -7,20 +7,21 @@
 package com.qsboy.antirecall.access;
 
 import android.accessibilityservice.AccessibilityService;
+import android.os.Handler;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import com.qsboy.antirecall.ui.activyty.App;
+import com.qsboy.antirecall.ui.activity.App;
 import com.qsboy.antirecall.utils.NodesInfo;
 
 import java.util.Date;
 import java.util.List;
 
-import static com.qsboy.antirecall.ui.activyty.App.pkgQQ;
-import static com.qsboy.antirecall.ui.activyty.App.pkgThis;
-import static com.qsboy.antirecall.ui.activyty.App.pkgTim;
-import static com.qsboy.antirecall.ui.activyty.App.pkgWX;
+import static com.qsboy.antirecall.ui.activity.App.pkgQQ;
+import static com.qsboy.antirecall.ui.activity.App.pkgThis;
+import static com.qsboy.antirecall.ui.activity.App.pkgTim;
+import static com.qsboy.antirecall.ui.activity.App.pkgWX;
 
 
 public class MainService extends AccessibilityService {
@@ -46,8 +47,9 @@ public class MainService extends AccessibilityService {
 
             int eventType = event.getEventType();
             if (eventType != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+                Log.w(TAG, AccessibilityEvent.eventTypeToString(eventType));
+            } else
                 Log.v(TAG, AccessibilityEvent.eventTypeToString(eventType));
-            }
 
             switch (eventType) {
                 case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
@@ -80,8 +82,10 @@ public class MainService extends AccessibilityService {
 //        } else if (event.getContentChangeTypes() == AccessibilityEvent.CONTENT_CHANGE_TYPE_TEXT)
 //            App.isTypeText = true;
         // 只有在一整条消息变动时才进入逻辑, 不然会引入很多无关事件
-        if (event.getSource().getChildCount() == 0)
+        AccessibilityNodeInfo source = event.getSource();
+        if (source.getChildCount() == 0)
             return;
+        new Handler().post(() -> NodesInfo.show(source, TAG, "d"));
 
         switch (packageName) {
             case pkgTim:
@@ -154,14 +158,13 @@ public class MainService extends AccessibilityService {
      * 在之后的10次 onContentChange 都去检查微信登录
      */
     private void autoLoginWX() {
-        // TODO: 2018/7/5 查看微信登录时的 event.getSource()
-        while (WXClient.WeChatAutoLoginTimes > 0) {
+        while (App.WeChatAutoLoginTimes > 0) {
             AccessibilityNodeInfo root = getRootInActiveWindow();
             if (root == null) {
                 Log.d(TAG, "autoLoginWX: root is null, return");
                 return;
             }
-            WXClient.WeChatAutoLoginTimes--;
+            App.WeChatAutoLoginTimes--;
             Log.v(TAG, "autoLoginWX");
             if (root.getChildCount() != 1) {
                 Log.v(TAG, "autoLoginWX: 1");
@@ -188,7 +191,7 @@ public class MainService extends AccessibilityService {
             }
             loginBtn.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             Log.w(TAG, "autoLoginWX: Perform Click");
-            WXClient.WeChatAutoLoginTimes = 0;
+            App.WeChatAutoLoginTimes = 0;
         }
     }
 }

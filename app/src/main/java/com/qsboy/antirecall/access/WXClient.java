@@ -12,7 +12,7 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import com.qsboy.antirecall.db.Dao;
-import com.qsboy.antirecall.ui.activyty.App;
+import com.qsboy.antirecall.ui.activity.App;
 
 import static android.content.Context.KEYGUARD_SERVICE;
 
@@ -27,11 +27,9 @@ public class WXClient {
     private String name;
     private String message;
 
-    public static int WeChatAutoLoginTimes;
-
     public static void autoLoginFlagEnable() {
         if (App.isWeChatAutoLogin)
-            WeChatAutoLoginTimes = 10;
+            App.WeChatAutoLoginTimes = 10;
     }
 
     public WXClient(Context context) {

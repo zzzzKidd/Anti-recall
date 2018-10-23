@@ -4,10 +4,11 @@
  * All Rights Reserved
  */
 
-package com.qsboy.antirecall.ui.activyty;
+package com.qsboy.antirecall.ui.activity;
 
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.qsboy.antirecall.R;
 import com.qsboy.antirecall.db.Dao;
@@ -158,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, new HelpFragment())
-//                    .add(R.id.activity_main, new HelpFragment())
                     .addToBackStack("help")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();

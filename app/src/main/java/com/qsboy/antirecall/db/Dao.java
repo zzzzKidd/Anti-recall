@@ -59,7 +59,12 @@ public class Dao {
                 instanceWeChat = new Dao(new DBHelper(context, DB_NAME_WE_CHAT, null, 6));
             return instanceWeChat;
         }
-        return new Dao(new DBHelper(context, DB_NAME_QQ, null, 1));
+        return null;
+    }
+
+    private void closeCursor() {
+        if (cursor != null)
+            cursor.close();
     }
 
     private void createTableIfNotExists(String name) {
@@ -89,6 +94,7 @@ public class Dao {
         }
         int maxID = cursor.getInt(0);
         Log.d(TAG, "getMaxID: " + maxID);
+        closeCursor();
         return maxID;
     }
 
@@ -176,6 +182,7 @@ public class Dao {
             list.add(cursor.getInt(0));
         } while (cursor.moveToNext());
         Log.d(TAG, "queryByMessage: >>>>>> " + list);
+        closeCursor();
         return list;
     }
 
@@ -198,6 +205,7 @@ public class Dao {
         String message = cursor.getString(2);
         long time = cursor.getLong(3);
         Log.d(TAG, "queryById: >>>>>> " + id + " : " + subName + " - " + message);
+        closeCursor();
         return new Messages(id, name, subName, message, time);
     }
 
@@ -226,6 +234,7 @@ public class Dao {
         messages.setRecalledID(recalledID);
         messages.setImages(image);
         Log.d(TAG, "queryRecalls: >>>>>> " + position);
+        closeCursor();
         return messages;
     }
 
@@ -259,6 +268,7 @@ public class Dao {
             list.add(messages);
         } while (cursor.moveToNext());
         Log.d(TAG, "queryAllRecalls: >>>>>> " + list);
+        closeCursor();
         return list;
     }
 
@@ -272,6 +282,7 @@ public class Dao {
             if (name != null)
                 list.add(name);
         } while (cursor.moveToNext());
+        closeCursor();
         return list;
     }
 
@@ -301,6 +312,7 @@ public class Dao {
                 return Long.compare(time2, time1);
             });
         }
+        closeCursor();
         return list;
     }
 
@@ -312,6 +324,7 @@ public class Dao {
         if (!cursor.moveToFirst()) return false;
         int count = cursor.getInt(0);
         existTables.put(name, count > 0);
+        closeCursor();
         return count > 0;
     }
 
@@ -340,6 +353,7 @@ public class Dao {
         if (!cursor.moveToFirst())
             return false;
         int idPreMsg = cursor.getInt(0);
+        closeCursor();
         return idMsg - idPreMsg == 1;
     }
 
@@ -360,7 +374,9 @@ public class Dao {
                         messages.getText(),
                         String.valueOf(messages.getTime())},
                 null, null, null);
-        return cursor.moveToFirst();
+        boolean b = cursor.moveToFirst();
+        closeCursor();
+        return b;
     }
 
     public void deleteMessage(String name, int id) {

@@ -15,38 +15,39 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.qsboy.antirecall.db.Dao;
 import com.qsboy.antirecall.db.Messages;
-import com.qsboy.antirecall.ui.activyty.App;
+import com.qsboy.antirecall.ui.activity.App;
 import com.qsboy.antirecall.utils.XToast;
 import com.qsboy.antirecall.utils.XToastPro;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qsboy.antirecall.ui.activyty.App.addedMessage;
+import static com.qsboy.antirecall.access.FaceMap.replaceFace;
+import static com.qsboy.antirecall.ui.activity.App.addedMessage;
 import static com.qsboy.antirecall.utils.ImageHelper.searchImageFile;
 
 public abstract class Client {
 
-    AccessibilityNodeInfo titleNode;
-    AccessibilityNodeInfo chatGroupViewNode;
-    AccessibilityNodeInfo redPegNode;
-    AccessibilityNodeInfo otherMsgNode;
-    AccessibilityNodeInfo inputNode;
-    AccessibilityNodeInfo sendBtnNode;
-    String TAG = "Client";
-    String title = "";
-    String subName = "";
-    String message = "";
-    String pSubName = "";
-    String pMessage = "";
-    String RECALL = "撤回了一条消息";
+    protected AccessibilityNodeInfo titleNode;
+    protected AccessibilityNodeInfo chatGroupViewNode;
+    protected AccessibilityNodeInfo redPegNode;
+    protected AccessibilityNodeInfo otherMsgNode;
+    protected AccessibilityNodeInfo inputNode;
+    protected AccessibilityNodeInfo sendBtnNode;
+    protected String TAG = "Client";
+    protected String title = "";
+    protected String subName = "";
+    protected String message = "";
+    protected String pSubName = "";
+    protected String pMessage = "";
+    protected String RECALL = "撤回了一条消息";
     // TODO: 英文
-    String client;
-    boolean isRecalledMsg;
-    boolean isOtherMsg;
-    boolean isWX;
-    int top;
-    int bottom;
+    protected String client;
+    protected boolean isRecalledMsg;
+    protected boolean isOtherMsg;
+    protected boolean isWX;
+    protected int top;
+    protected int bottom;
     private Dao dao;
     private Context context;
 
@@ -188,7 +189,7 @@ public abstract class Client {
             }
         }
         addedMessage = temp;
-        Log.e(TAG, "Add Msg: " + addedMessage + " " + dao.addMessage(title, subName, message));
+        Log.e(TAG, "Add Msg: " + addedMessage + " " + dao.addMessage(title, subName, replaceFace(message)));
     }
 
     private class Recalls {

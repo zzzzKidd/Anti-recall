@@ -4,7 +4,7 @@
  * All Rights Reserved
  */
 
-package com.qsboy.antirecall.ui.activyty;
+package com.qsboy.antirecall.ui.activity;
 
 import android.app.Application;
 import android.content.Context;
@@ -13,6 +13,9 @@ import java.util.Date;
 
 
 public class App extends Application {
+
+    // 微信自动登录的flag
+    public static int WeChatAutoLoginTimes;
 
     // launch页停留时间
     public static final int LaunchDelayTime = 500;
